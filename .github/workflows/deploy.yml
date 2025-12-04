@@ -13,8 +13,9 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Node
@@ -23,15 +24,17 @@ jobs:
           node-version: 18
 
       - name: Install dependencies
+        working-directory: ./Costco Shopping App
         run: npm install
 
-      - name: Build the project
+      - name: Build project
+        working-directory: ./Costco Shopping App
         run: npm run build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist   # YOUR build output (we changed outDir → dist)
+          path: ./Costco Shopping App/dist
 
   deploy:
     runs-on: ubuntu-latest
@@ -39,6 +42,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
