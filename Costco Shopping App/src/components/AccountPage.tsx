@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Badge } from './ui/badge';
 import { Separator } from './ui/separator';
 import { ImageWithFallback } from './figma/ImageWithFallback';
-import { Product } from '../types';
+import { Product, Order } from '../types';
 
 interface AccountPageProps {
   favorites: string[];
@@ -25,70 +25,10 @@ interface AccountPageProps {
   userEmail?: string;
   userPhone?: string;
   onAddToCart?: (product: Product, quantity: number) => void;
+  orders?: Order[];
 }
 
-interface Order {
-  id: string;
-  date: string;
-  status: 'delivered' | 'processing' | 'shipped';
-  total: number;
-  items: { product: Product; quantity: number }[];
-  shippingAddress?: string;
-  paymentMethod?: string;
-  subtotal?: number;
-  tax?: number;
-  shipping?: number;
-}
-
-const mockOrders: Order[] = [
-  {
-    id: 'ORD-2024-1156',
-    date: '2024-11-28',
-    status: 'delivered',
-    total: 127.45,
-    subtotal: 119.97,
-    tax: 5.48,
-    shipping: 2.00,
-    shippingAddress: '123 Main Street, Charlotte, NC 28202',
-    paymentMethod: 'Visa ending in 4242',
-    items: [
-      { product: { id: '3', name: 'Coffee', price: 9.99, quantity: '156 pack', category: 'Household', image: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=800&q=80' }, quantity: 2 },
-      { product: { id: '8', name: 'Kirkland Signature Olive Oil', price: 22.99, quantity: '2 liters', category: 'Grocery', image: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=800&q=80' }, quantity: 1 },
-    ]
-  },
-  {
-    id: 'ORD-2024-1089',
-    date: '2024-11-20',
-    status: 'delivered',
-    total: 89.32,
-    subtotal: 83.94,
-    tax: 3.38,
-    shipping: 2.00,
-    shippingAddress: '123 Main Street, Charlotte, NC 28202',
-    paymentMethod: 'Mastercard ending in 8888',
-    items: [
-      { product: { id: '4', name: 'Kirkland Signature Organic Eggs', price: 8.99, quantity: '24 count', category: 'Grocery', image: 'https://plus.unsplash.com/premium_photo-1676686125407-227f3d352df8?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8RWdnc3xlbnwwfHwwfHx8MA%3D%3D' }, quantity: 3 },
-      { product: { id: '6', name: 'Rotisserie Chicken', price: 4.99, quantity: '3 lbs', category: 'Deli', image: 'https://images.unsplash.com/photo-1598103442097-8b74394b95c6?w=800&q=80' }, quantity: 2 },
-    ]
-  },
-  {
-    id: 'ORD-2024-0987',
-    date: '2024-11-15',
-    status: 'delivered',
-    total: 245.67,
-    subtotal: 229.96,
-    tax: 13.71,
-    shipping: 2.00,
-    shippingAddress: '123 Main Street, Charlotte, NC 28202',
-    paymentMethod: 'Visa ending in 4242',
-    items: [
-      { product: { id: '9', name: 'Fresh Atlantic Salmon', price: 29.99, quantity: '3 lbs', category: 'Seafood', image: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=800&q=80' }, quantity: 2 },
-      { product: { id: '5', name: 'Kirkland Signature Almonds', price: 14.99, quantity: '3 lbs', category: 'Grocery', image: 'https://images.unsplash.com/photo-1608797178974-15b35a64ede9?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8QWxtb25kc3xlbnwwfHwwfHx8MA%3D%3D' }, quantity: 1 },
-    ]
-  }
-];
-
-export function AccountPage({ favorites, products, onNavigateToHome, onLogout, username, isGuest, onServiceClick, onProductClick, membershipType, userFullName, userEmail, userPhone, onAddToCart }: AccountPageProps) {
+export function AccountPage({ favorites, products, onNavigateToHome, onLogout, username, isGuest, onServiceClick, onProductClick, membershipType, userFullName, userEmail, userPhone, onAddToCart, orders }: AccountPageProps) {
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [isOrderDetailsOpen, setIsOrderDetailsOpen] = useState(false);
@@ -133,7 +73,7 @@ export function AccountPage({ favorites, products, onNavigateToHome, onLogout, u
   };
 
   const favoriteProducts = products.filter(p => favorites.includes(p.id));
-  const totalSpent = mockOrders.reduce((sum, order) => sum + order.total, 0);
+  const totalSpent = orders ? orders.reduce((sum, order) => sum + order.total, 0) : 0;
   const rewardsBalance = Math.floor(totalSpent * 0.02 * 100) / 100; // 2% cashback
 
   const getStatusColor = (status: string) => {
@@ -324,7 +264,7 @@ export function AccountPage({ favorites, products, onNavigateToHome, onLogout, u
             <div className="w-12 h-12 rounded-full bg-[#88BDF2] bg-opacity-20 flex items-center justify-center mb-2">
               <BarChart3 className="w-6 h-6 text-[#6A89A7]" />
             </div>
-            <div className="text-2xl text-[#384959] mb-1">{mockOrders.length}</div>
+            <div className="text-2xl text-[#384959] mb-1">{orders ? orders.length : 0}</div>
             <div className="text-xs text-[#6A89A7]">Orders</div>
           </div>
         </Card>
@@ -364,7 +304,7 @@ export function AccountPage({ favorites, products, onNavigateToHome, onLogout, u
 
         {/* Orders Tab */}
         <TabsContent value="orders" className="space-y-4">
-          {mockOrders.map((order) => (
+          {orders ? orders.map((order) => (
             <Card key={order.id} className="border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
               <div className="p-4">
                 <div className="flex items-start justify-between mb-3">
@@ -423,7 +363,20 @@ export function AccountPage({ favorites, products, onNavigateToHome, onLogout, u
                 </div>
               </div>
             </Card>
-          ))}
+          )) : (
+            <Card className="p-8 border-gray-200">
+              <div className="text-center">
+                <Package className="w-12 h-12 text-[#6A89A7] mx-auto mb-3 opacity-50" />
+                <p className="text-[#6A89A7] mb-4">No orders yet</p>
+                <button
+                  onClick={onNavigateToHome}
+                  className="bg-[#E8DCC2] text-[#384959] px-6 py-2 rounded-lg hover:bg-[#d4c8ad] transition-colors"
+                >
+                  Browse Products
+                </button>
+              </div>
+            </Card>
+          )}
         </TabsContent>
 
         {/* Favorites Tab */}
