@@ -15,7 +15,6 @@ import { GuestPrompt } from "./components/GuestPrompt";
 import { ProductDetailModal } from "./components/ProductDetailModal";
 import { ImageWithFallback } from "./components/figma/ImageWithFallback";
 import { ErrorBoundary } from "./components/ErrorBoundary";
-import { recommendedProducts } from "./components/TwoLayerCarousel";
 import { allServices } from "./components/ServicesHub";
 import { Product, CartItem, Order } from "./types";
 
