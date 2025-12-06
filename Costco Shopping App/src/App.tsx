@@ -1,23 +1,23 @@
 import { useState } from "react";
-import { ErrorBoundary } from "./components/ErrorBoundary";
 import { Header } from "./components/Header";
 import { ProductGrid } from "./components/ProductGrid";
-import { ShoppingCart } from "./components/ShoppingCart";
 import { BottomNav } from "./components/BottomNav";
-import { LocationBanner } from "./components/LocationBanner";
-import { DealsCarousel } from "./components/DealsCarousel";
+import { ShoppingCart } from "./components/ShoppingCart";
+import { Login } from "./components/Login";
+import { Register } from "./components/Register";
 import { AccountPage } from "./components/AccountPage";
-import { HomePage } from "./components/HomePage";
 import { CheckoutPage } from "./components/CheckoutPage";
 import { ServicesPage } from "./components/ServicesPage";
 import { OrderConfirmation } from "./components/OrderConfirmation";
-import { Login } from "./components/Login";
-import { Register } from "./components/Register";
+import { HomePage } from "./components/HomePage";
+import { SearchResults } from "./components/SearchResults";
 import { GuestPrompt } from "./components/GuestPrompt";
 import { ProductDetailModal } from "./components/ProductDetailModal";
-import { SearchResults } from "./components/SearchResults";
 import { ImageWithFallback } from "./components/figma/ImageWithFallback";
-import { Product, CartItem } from "./types";
+import { ErrorBoundary } from "./components/ErrorBoundary";
+import { recommendedProducts } from "./components/TwoLayerCarousel";
+import { allServices } from "./components/ServicesHub";
+import { Product, CartItem, Order } from "./types";
 
 const products: Product[] = [
   {
@@ -229,8 +229,11 @@ export default function App() {
   const [orderNumber, setOrderNumber] = useState("");
   const [showGuestPrompt, setShowGuestPrompt] = useState(false);
   const [showAllDeals, setShowAllDeals] = useState(false);
+  const [showAllRecommendations, setShowAllRecommendations] = useState(false);
+  const [showAllServices, setShowAllServices] = useState(false);
   const [selectedProduct, setSelectedProduct] =
     useState<Product | null>(null);
+  const [orders, setOrders] = useState<Order[]>([]);
 
   const categories = [
     "All",
@@ -360,13 +363,36 @@ export default function App() {
   const handleCheckout = () => {
     setCurrentView("checkout");
   };
-
-  const handleOrderComplete = () => {
-    // Generate order number
-    const orderNum =
-      "COSTCO-" +
-      Math.random().toString(36).substring(2, 11).toUpperCase();
-    setOrderNumber(orderNum);
+    
+    // Calculate order totals
+    const subtotal = cart.reduce(
+      (sum, item) => sum + item.product.price * item.quantity,
+      0
+    );
+    const tax = subtotal * 0.08;
+    const shipping = 2.00;
+    const total = subtotal + tax + shipping;
+    
+    // Create new order
+    const newOrder: Order = {
+      id: orderNum,
+      date: new Date().toISOString().split('T')[0], // YYYY-MM-DD format
+      status: 'processing',
+      total: parseFloat(total.toFixed(2)),
+      items: cart.map(item => ({
+        product: item.product,
+        quantity: item.quantity
+      })),
+      shippingAddress: '123 Main Street, Charlotte, NC 28202',
+      paymentMethod: 'Visa ending in 4242',
+      subtotal: parseFloat(subtotal.toFixed(2)),
+      tax: parseFloat(tax.toFixed(2)),
+      shipping: shipping
+    };
+    
+    // Add order to orders list
+    setOrders(prevOrders => [newOrder, ...prevOrders]);
+    
     setCart([]);
     setCurrentView("orderConfirmation");
   };
@@ -496,6 +522,71 @@ export default function App() {
       );
     }
 
+    // Show all recommendations view
+    if (showAllRecommendations) {
+      return (
+        <div className="px-4 py-8">
+          <div className="flex items-center gap-3 mb-6">
+            <button
+              onClick={() => setShowAllRecommendations(false)}
+              className="text-[#6A89A7] hover:text-[#384959] transition-colors"
+            >
+              &lt; Back
+            </button>
+            <h2 className="text-[#384959]">
+              You May Also Like
+            </h2>
+          </div>
+          <ProductGrid
+            products={recommendedProducts}
+            onAddToCart={addToCart}
+            favorites={favorites}
+            onToggleFavorite={toggleFavorite}
+            onProductClick={setSelectedProduct}
+          />
+        </div>
+      );
+    }
+
+    // Show all services view
+    if (showAllServices) {
+      return (
+        <div className="px-4 py-8">
+          <div className="flex items-center gap-3 mb-6">
+            <button
+              onClick={() => setShowAllServices(false)}
+              className="text-[#6A89A7] hover:text-[#384959] transition-colors"
+            >
+              &lt; Back
+            </button>
+            <h2 className="text-[#384959]">
+              All Available Services
+            </h2>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            {allServices.map((service) => {
+              const IconComponent = service.icon;
+              return (
+                <button
+                  key={service.id}
+                  className="flex flex-col items-center gap-3 p-6 bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md hover:bg-gray-50 transition-all active:scale-95"
+                  onClick={() => handleServiceClick(service.id as 'membership' | 'optical' | 'pharmacy' | 'foodcourt' | 'travel' | 'gas' | 'grocery' | 'delivery' | 'payments')}
+                >
+                  <div className="w-20 h-20 rounded-full border-2 border-[#384959] flex items-center justify-center hover:border-[#6A89A7] hover:bg-[#BDDDFC]/20 transition-all">
+                    <IconComponent className="w-8 h-8 text-[#384959]" strokeWidth={1.5} />
+                  </div>
+                  <div className="text-center">
+                    <h3 className="text-sm text-[#384959] mb-1">{service.name}</h3>
+                    <p className="text-xs text-[#6A89A7]">{service.description}</p>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      );
+    }
+
     switch (activeTab) {
       case "home":
         return (
@@ -506,6 +597,8 @@ export default function App() {
             recentlyViewed={recentlyViewedProducts}
             onServiceClick={handleServiceClick}
             onShowAllDeals={() => setShowAllDeals(true)}
+            onShowAllRecommendations={() => setShowAllRecommendations(true)}
+            onShowAllServices={() => setShowAllServices(true)}
             onProductClick={setSelectedProduct}
             isGuest={isGuest}
           />
@@ -681,6 +774,7 @@ export default function App() {
             userEmail={userEmail}
             userPhone={userPhone}
             onAddToCart={addToCart}
+            orders={orders}
           />
         );
 
