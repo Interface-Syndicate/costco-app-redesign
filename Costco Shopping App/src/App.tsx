@@ -363,6 +363,13 @@ export default function App() {
   const handleCheckout = () => {
     setCurrentView("checkout");
   };
+
+  const handleOrderComplete = () => {
+    // Generate order number
+    const orderNum =
+      "COSTCO-" +
+      Math.random().toString(36).substring(2, 11).toUpperCase();
+    setOrderNumber(orderNum);
     
     // Calculate order totals
     const subtotal = cart.reduce(
