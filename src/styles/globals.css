@@ -1,0 +1,240 @@
+@custom-variant dark (&:is(.dark *));
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Lato:wght@300;400&display=swap');
+
+:root {
+  --font-size: 16px;
+  
+  /* Costco Design System Colors */
+  --primary-dusty-blue: #6A89A7;
+  --secondary-sky-blue: #88BDF2;
+  --accent-soft-beige: #E8DCC2;
+  --dark-charcoal-blue: #384959;
+  --light-mist-blue: #BDDDFC;
+  --success-sage-green: #9FB8A3;
+  --error-coral-red: #E57373;
+  
+  /* Mapped to existing variables */
+  --background: #ffffff;
+  --foreground: #384959;
+  --card: #ffffff;
+  --card-foreground: #384959;
+  --popover: #ffffff;
+  --popover-foreground: #384959;
+  --primary: #6A89A7;
+  --primary-foreground: #ffffff;
+  --secondary: #88BDF2;
+  --secondary-foreground: #384959;
+  --muted: #BDDDFC;
+  --muted-foreground: #6A89A7;
+  --accent: #E8DCC2;
+  --accent-foreground: #384959;
+  --destructive: #E57373;
+  --destructive-foreground: #ffffff;
+  --success: #9FB8A3;
+  --success-foreground: #ffffff;
+  --border: rgba(106, 137, 167, 0.2);
+  --input: transparent;
+  --input-background: #f8f9fa;
+  --switch-background: #cbced4;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --font-weight-bold: 700;
+  --font-weight-light: 300;
+  --ring: #6A89A7;
+  --chart-1: #6A89A7;
+  --chart-2: #88BDF2;
+  --chart-3: #E8DCC2;
+  --chart-4: #9FB8A3;
+  --chart-5: #384959;
+  --radius: 0.5rem;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #384959;
+  --sidebar-primary: #6A89A7;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #BDDDFC;
+  --sidebar-accent-foreground: #384959;
+  --sidebar-border: rgba(106, 137, 167, 0.2);
+  --sidebar-ring: #6A89A7;
+  
+  /* Spacing */
+  --spacing-section: 8px;
+  --spacing-items: 25px;
+  --spacing-words: 25px;
+}
+
+.dark {
+  --background: #384959;
+  --foreground: #ffffff;
+  --card: #384959;
+  --card-foreground: #ffffff;
+  --popover: #384959;
+  --popover-foreground: #ffffff;
+  --primary: #6A89A7;
+  --primary-foreground: #ffffff;
+  --secondary: #88BDF2;
+  --secondary-foreground: #384959;
+  --muted: #6A89A7;
+  --muted-foreground: #BDDDFC;
+  --accent: #E8DCC2;
+  --accent-foreground: #384959;
+  --destructive: #E57373;
+  --destructive-foreground: #ffffff;
+  --border: rgba(189, 221, 252, 0.2);
+  --input: rgba(189, 221, 252, 0.2);
+  --ring: #88BDF2;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --chart-1: #6A89A7;
+  --chart-2: #88BDF2;
+  --chart-3: #E8DCC2;
+  --chart-4: #9FB8A3;
+  --chart-5: #BDDDFC;
+  --sidebar: #384959;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #6A89A7;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #6A89A7;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: rgba(189, 221, 252, 0.2);
+  --sidebar-ring: #88BDF2;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-input-background: var(--input-background);
+  --color-switch-background: var(--switch-background);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Lato', sans-serif;
+  }
+}
+
+/**
+ * Base typography following Costco Design System.
+ */
+@layer base {
+  :where(:not(:has([class*=' text-']), :not(:has([class^='text-'])))) {
+    h1 {
+      font-family: 'Inter', sans-serif;
+      font-size: 32px;
+      font-weight: 700;
+      line-height: 1.5;
+    }
+
+    h2 {
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.5;
+    }
+
+    h3 {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.5;
+    }
+
+    h4 {
+      font-family: 'Lato', sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.5;
+    }
+
+    p {
+      font-family: 'Lato', sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.5;
+    }
+
+    label {
+      font-family: 'Lato', sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.5;
+    }
+
+    button {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.5;
+    }
+
+    input {
+      font-family: 'Lato', sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.5;
+    }
+  }
+}
+
+html {
+  font-size: var(--font-size);
+}
+
+/* Hide scrollbar utility */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Line clamp utilities */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
