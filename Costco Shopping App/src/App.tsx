@@ -15,7 +15,7 @@ import { GuestPrompt } from "./components/GuestPrompt";
 import { ProductDetailModal } from "./components/ProductDetailModal";
 import { ImageWithFallback } from "./components/figma/ImageWithFallback";
 import { ErrorBoundary } from "./components/ErrorBoundary";
-import { allServices } from "./components/ServicesHub";
+import { ServiceHub } from "./components/ServicesHub";
 import { Product, CartItem, Order } from "./types";
 
 const products: Product[] = [
